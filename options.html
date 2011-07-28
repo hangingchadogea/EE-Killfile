@@ -31,7 +31,9 @@ function restore_options() {
 <body onload="restore_options()">
 
 Kill regex: <input type="text" id="kill_regex" name="kill_regex" />
-<br>
+<p>
+The | sign means "or". So "Boeheim|Paleo" means you'll ignore any post containing either "Boeheim" or "Paleo". To be case-insensitive you can do something like "[Pp]aleo". To ignore quoted posts by a given set of users, you can do something like 'quote_author..(HAL|Yun)'. There are many online tutorials for the use of regular expressions if you would like to learn more.
+</p>
 <button onclick="save_options()">Save</button>
 <p id="status"></p>
 </body>
