@@ -1,0 +1,13 @@
+{
+  "name": "EE Killfile",
+  "version": "0.1",
+  "description": "Hides any posts matching a regex in Expression Engine fora",
+  "background_page": "background.html",
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["http://www.baseballthinkfactory.org/files/forums/viewthread/*"],
+      "js": ["content_script.js"]
+    }
+  ]
+}
