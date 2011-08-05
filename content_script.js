@@ -44,6 +44,3 @@ function after_send_request(response){
 }
 
 chrome.extension.sendRequest({method: "get_kill_regex"}, after_send_request);
-
-//    var ignoreBarHTML = 'this is stupid';
-// What we care about here is elements of name TR. The showHideRow function handles this. I wonder if we can call that from in here. But I can just do what it does and set something dot style dot display to none.
