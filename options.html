@@ -8,6 +8,9 @@ function save_options() {
   var kill_regex = text_area.value;
   localStorage["kill_regex"] = kill_regex;
 
+  var autoignore = document.getElementById("autoignore").checked;
+  localStorage["autoignore"] = autoignore;
+
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
   status.innerHTML = "Options Saved.";
@@ -24,8 +27,14 @@ function restore_options() {
   }
   var text_area = document.getElementById("kill_regex");
   text_area.value = kill_regex;
+
+  var autoignore = string_to_bool(localStorage["autoignore"]);
+  document.getElementById("autoignore").checked = autoignore;
 }
 
+function string_to_bool(string){
+  return (string.toLowerCase().charAt(0) == "t" );
+}
 </script>
 
 <body onload="restore_options()">
@@ -36,6 +45,10 @@ The | sign means "or". So "Boeheim|Paleo" means you'll ignore any post containin
 </p>
 <p>
 To block inline images in the Lounge, use "img src=.(?!http://www.baseballthinkfactory.org)".
+</p>
+<p>
+Automatically hide posts quoting ignored users:
+<input type="checkbox" id="autoignore" name="autoignore">
 </p>
 <button onclick="save_options()">Save</button>
 <p id="status"></p>

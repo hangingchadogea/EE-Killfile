@@ -1,9 +1,9 @@
   <script>
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-    if (request.method == "get_kill_regex") {
-      sendResponse({kill_regex: localStorage["kill_regex"]});
-    }
-    else
-      sendResponse({}); // snub them.
+  if (request.method == "get_configuration") {
+    sendResponse({configuration: localStorage});
+  }
+  else
+    sendResponse({}); // snub them.
 });
   </script>
