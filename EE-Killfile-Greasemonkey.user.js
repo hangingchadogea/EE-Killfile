@@ -10,13 +10,15 @@ window.addEventListener('load', actually_do_things(configuration), true);
 // code in content_script.js and then run chrome_to_greasemonkey.sh again.
 // Thanks to Joe Mauer Power Hour for leading the way.
 
-function whyIgnore(element, kill_regex, ignored_users) {
+function whyIgnore(element, kill_regex, ignored_users, hide_images) {
   if (!row_is_forum_comment(element)){
     return false;
   }
   if (post_is_ignored_server_side(element)) {
     return false; // We're already ignoring it, leave well enough alone.
   }
+  if (hide_images && post_has_inline_image(element))
+    return "it embeds an inline image.";
   if (ignored_users.length > 0) {
     quote_match = element.innerHTML.match("quote_author..(" +
                                           ignored_users.join("|") + ") - ");
@@ -34,7 +36,8 @@ function whyIgnore(element, kill_regex, ignored_users) {
 function actually_do_things(response){
   var kill_regex = response.configuration.kill_regex;
   if (kill_regex == undefined)
-    kill_regex = "quote_author..(HAL McRae|Yun Taragoashi)";
+    kill_regex = "quote_author..(Yun Taragoashi)";
+  var hide_images = (response.configuration.hide_images != "false");
   if (response.configuration.autoignore != "false") {
     ignoredUsers = determine_ignored_users();
   }
@@ -43,7 +46,7 @@ function actually_do_things(response){
   }
   var el = document.getElementsByTagName("tr");
   for(var i=0;i<el.length;i++){
-    var reason = whyIgnore(el[i], kill_regex, ignoredUsers);
+    var reason = whyIgnore(el[i], kill_regex, ignoredUsers, hide_images);
     if (reason) {
       set_post_ignored(el[i], reason);
       i = i+2;
@@ -92,13 +95,19 @@ function post_is_ignored_server_side(row) {
   return row.style.display == "none";
 }
 
+function post_has_inline_image(row) {
+  return row.innerHTML.match(
+      "img src=.(?!http://www.baseballthinkfactory.org)");
+}
+
 function determine_ignored_users() {
   var ignoredUsers = new Array();
   var allRows = document.getElementsByTagName("tr");
   for(var i=0;i<allRows.length;i++){
     currentRow = allRows[i];
     if (row_is_forum_comment(currentRow)) {
-      author = comment_author(currentRow);
+      author = comment_author(currentRow).replace(
+          /[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
       if (post_is_ignored_server_side(currentRow)) {
         if (ignoredUsers.indexOf(author) == -1) {
           ignoredUsers.push(author);
