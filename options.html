@@ -8,6 +8,9 @@ function save_options() {
   var kill_regex = text_area.value;
   localStorage["kill_regex"] = kill_regex;
 
+  var hide_images = document.getElementById("hide_images").checked;
+  localStorage["hide_images"] = hide_images;
+
   var autoignore = document.getElementById("autoignore").checked;
   localStorage["autoignore"] = autoignore;
 
@@ -23,17 +26,23 @@ function save_options() {
 function restore_options() {
   var kill_regex = localStorage["kill_regex"];
   if (kill_regex == undefined) {
-    kill_regex="candlepin|quote_author\">(HAL McRae|Yun Taragoashi)";
+    kill_regex="quote_author\">Yun Taragoashi";
   }
   var text_area = document.getElementById("kill_regex");
   text_area.value = kill_regex;
 
-  var autoignore = string_to_bool(localStorage["autoignore"]);
+  var hide_images = string_to_bool(localStorage["hide_images"], true);
+  document.getElementById("hide_images").checked = hide_images;
+
+  var autoignore = string_to_bool(localStorage["autoignore"], true);
   document.getElementById("autoignore").checked = autoignore;
 }
 
-function string_to_bool(string){
-  return (string.toLowerCase().charAt(0) == "t" );
+function string_to_bool(string, default_option){
+  if default_option 
+    return (string.toLowerCase().charAt(0) != "f" );
+  else
+    return (string.toLowerCase().charAt(0) == "t" );
 }
 </script>
 
@@ -44,7 +53,8 @@ Kill regex: <input type="text" id="kill_regex" name="kill_regex" />
 The | sign means "or". So "Boeheim|Paleo" means you'll ignore any post containing either "Boeheim" or "Paleo". To be case-insensitive you can do something like "[Pp]aleo". To ignore quoted posts by a given set of users, you can do something like 'quote_author..(HAL|Yun)'. There are many online tutorials for the use of regular expressions if you would like to learn more.
 </p>
 <p>
-To block inline images in the Lounge, use "img src=.(?!http://www.baseballthinkfactory.org)".
+Block inline images in the Lounge:
+<input type="checkbox" id="hide_images" name="hide_images">
 </p>
 <p>
 Automatically hide posts quoting ignored users (when the ignored user has posted on the same page):
