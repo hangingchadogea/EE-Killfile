@@ -21,7 +21,7 @@ function whyIgnore(element, kill_regex, ignored_users, hide_images) {
   if (hide_images && post_has_inline_image(element))
     return "it embeds an inline image.";
   if (ignored_users.length > 0) {
-    quote_match = element.innerHTML.match("quote_author..(" +
+    quote_match = element.innerHTML.match("quote_author.*(" +
                                           ignored_users.join("|") + ") - ");
     if (quote_match) {
       return "it quotes <b>" + quote_match[1] + "</b>";
