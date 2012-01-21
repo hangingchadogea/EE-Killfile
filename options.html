@@ -39,7 +39,7 @@ function restore_options() {
 }
 
 function string_to_bool(string, default_option){
-  if default_option 
+  if (default_option) 
     return (string.toLowerCase().charAt(0) != "f" );
   else
     return (string.toLowerCase().charAt(0) == "t" );
