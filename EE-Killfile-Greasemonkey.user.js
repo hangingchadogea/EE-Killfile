@@ -78,7 +78,10 @@ function comment_author(comment_row) {
   var hasInnerText =
       (document.getElementsByTagName("body")[0].innerText != undefined) ? true : false;
   var anchors = comment_row.getElementsByTagName("a");
-  var author_link = anchors[0];
+  var author_link = undefined;
+  for (var i=0;i<anchors.length;i++)
+    if (anchors[i].href.match('/member/'))
+      author_link = anchors[i];
   if (hasInnerText) {
     return author_link.innerText;
   }
