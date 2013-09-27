@@ -22,19 +22,28 @@ function save_options() {
   }, 750);
 }
 
+
+default_config = {"kill_regex": "quote_author..(Yun Taragoashi)",
+                  "autoignore": true,
+                  "hide_images": true}
+function load_config() {
+  chrome.storage.sync.get("configuration", restore_options);
+}
+
 // Restores select box state to saved value from localStorage.
-function restore_options() {
-  var kill_regex = localStorage["kill_regex"];
-  if (kill_regex == undefined) {
-    kill_regex="quote_author\">Yun Taragoashi";
-  }
+function restore_options(response) {
+  if (response && response.configuration)
+    var configuration = response.configuration;
+  else
+    var configuration = default_config;
+  var kill_regex = configuration.kill_regex;
   var text_area = document.getElementById("kill_regex");
   text_area.value = kill_regex;
 
-  var hide_images = string_to_bool(localStorage["hide_images"], true);
+  var hide_images = configuration.hide_images;
   document.getElementById("hide_images").checked = hide_images;
 
-  var autoignore = string_to_bool(localStorage["autoignore"], true);
+  var autoignore = configuration.hide_images;
   document.getElementById("autoignore").checked = autoignore;
 }
 
