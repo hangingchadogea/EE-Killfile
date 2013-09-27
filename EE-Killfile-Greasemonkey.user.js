@@ -10,6 +10,10 @@ window.addEventListener('load', actually_do_things(configuration), true);
 // and you probably don't want to edit it except for debugging. Edit the
 // code in content_script.js and then run chrome_to_greasemonkey.sh again.
 // Thanks to Joe Mauer Power Hour for leading the way.
+default_config = {"kill_regex": "quote_author..(Yun Taragoashi)",
+                  "autoignore": true,
+                  "hide_images": true}
+chrome.storage.sync.get("configuration", actually_do_things);
 
 function whyIgnore(element, kill_regex, ignored_users, hide_images) {
   if (!row_is_forum_comment(element)){
@@ -35,11 +39,17 @@ function whyIgnore(element, kill_regex, ignored_users, hide_images) {
 }
 
 function actually_do_things(response){
-  var kill_regex = response.configuration.kill_regex;
-  if (kill_regex == undefined)
-    kill_regex = "quote_author..(Yun Taragoashi)";
-  var hide_images = (response.configuration.hide_images != "false");
-  if (response.configuration.autoignore != "false") {
+  if (response && response.configuration) {
+    console.log("Using configuration from chrome.sync:" + configuration)
+    var configuration = response.configuration;
+  }
+  else {
+    console.log("Using default configuration.")
+    var configuration = default_config;
+  }
+  var kill_regex = configuration.kill_regex;
+  var hide_images = configuration.hide_images;
+  if (configuration.autoignore) {
     ignoredUsers = determine_ignored_users();
   }
   else {
@@ -80,7 +90,7 @@ function comment_author(comment_row) {
   var anchors = comment_row.getElementsByTagName("a");
   var author_link = undefined;
   for (var i=0;i<anchors.length;i++)
-    if (anchors[i].href.match('/member/'))
+    if (anchors[i].href.match('/membership/'))
       author_link = anchors[i];
   if (hasInnerText) {
     return author_link.innerText;
