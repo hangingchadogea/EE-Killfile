@@ -110,6 +110,7 @@ function determine_ignored_users() {
     if (row_is_forum_comment(currentRow)) {
       author = comment_author(currentRow).replace(
           /[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+      author = author.replace(/[\s\\]+$/g,'');
       if (post_is_ignored_server_side(currentRow)) {
         if (ignoredUsers.indexOf(author) == -1) {
           ignoredUsers.push(author);
