@@ -1,6 +1,7 @@
 default_config = {"kill_regex": "quote_author..(Yun Taragoashi)",
                   "autoignore": true,
-                  "hide_images": true}
+                  "hide_images": true,
+                  "hide_fully": false}
 
 function save_options() {
   var text_area = document.getElementById("kill_regex");
@@ -10,9 +11,14 @@ function save_options() {
 
   var autoignore = document.getElementById("autoignore").checked;
 
+  var hide_fully = document.getElementById("hide_fully").checked;
+
   var configuration = {"kill_regex": kill_regex,
                        "hide_images": hide_images,
-                       "autoignore": autoignore};
+                       "autoignore": autoignore,
+                       "hide_fully": hide_fully};
+  console.log("Saving configuration:");
+  console.log(configuration);
   chrome.storage.sync.set({"configuration": configuration}, updateStatus);
 }
 
@@ -31,20 +37,30 @@ function load_config() {
 
 // Restores select box state to saved value from localStorage.
 function restore_options(response) {
-  if (response && response.configuration)
+  if (response && response.configuration) {
     var configuration = response.configuration;
+    console.log("Using configuration from chrome.sync:")
+    console.log(configuration);
+    for (var key in default_config) {
+      if (configuration[key] == undefined) {
+        console.log(key + " was undefined, using default value.");
+        configuration[key] = default_config[key];
+      }
+    }
+  }
   else {
+    console.log("Using default configuration.")
     var configuration = default_config;
   }
-  var kill_regex = configuration.kill_regex;
+
   var text_area = document.getElementById("kill_regex");
-  text_area.value = kill_regex;
+  text_area.value = configuration.kill_regex;
 
-  var hide_images = configuration.hide_images;
-  document.getElementById("hide_images").checked = hide_images;
-
-  var autoignore = configuration.hide_images;
-  document.getElementById("autoignore").checked = autoignore;
+  var boolean_properties = ["hide_images", "autoignore", "hide_fully"];
+  for (i = 0; i < boolean_properties.length; ++i) {
+    document.getElementById(boolean_properties[i]).checked = configuration[
+        boolean_properties[i]];
+  }
 }
 
 function string_to_bool(string, default_option){

@@ -1,6 +1,7 @@
-default_config = {"kill_regex": "quote_author..(Yun Taragoashi)",
+default_config = {"kill_regex": "this default string will match nothing I hope",
                   "autoignore": true,
-                  "hide_images": true}
+                  "hide_images": true,
+                  "hide_fully": false}
 chrome.storage.sync.get("configuration", actually_do_things);
 
 function whyIgnore(element, kill_regex, ignored_users, hide_images) {
@@ -28,15 +29,23 @@ function whyIgnore(element, kill_regex, ignored_users, hide_images) {
 
 function actually_do_things(response){
   if (response && response.configuration) {
-    console.log("Using configuration from chrome.sync:" + configuration)
     var configuration = response.configuration;
+    console.log("Using configuration from chrome.sync:")
+    console.log(configuration);
+    for (var key in default_config) {
+      if (configuration[key] == undefined) {
+        console.log(key + " was undefined, using default value.");
+        configuration[key] = default_config[key];
+      }
+    }
   }
   else {
     console.log("Using default configuration.")
     var configuration = default_config;
-  }
+  } 
   var kill_regex = configuration.kill_regex;
   var hide_images = configuration.hide_images;
+  var hide_fully = configuration.hide_fully;
   if (configuration.autoignore) {
     ignoredUsers = determine_ignored_users();
   }
@@ -45,16 +54,23 @@ function actually_do_things(response){
   }
   var el = document.getElementsByTagName("tr");
   for(var i=0;i<el.length;i++){
+    if (hide_fully && row_is_ignore_bar(el[i])) {
+      el[i].style.display = "none";
+      continue;
+    }
     var reason = whyIgnore(el[i], kill_regex, ignoredUsers, hide_images);
     if (reason) {
-      set_post_ignored(el[i], reason);
+      set_post_ignored(el[i], reason, hide_fully);
       i = i+2;
     }
   }
 }
 
-function set_post_ignored(post_row, reason){
+function set_post_ignored(post_row, reason, hide_fully){
   post_row.style.display = "none";
+  if (hide_fully && reason.substring(0, 9) == "it quotes") {
+    return;
+  }
   var ignoreBarElement = document.createElement('tr');
   var firstCell = document.createElement('td');
   firstCell.setAttribute("colspan", "3");
@@ -91,6 +107,11 @@ function comment_author(comment_row) {
 function row_is_forum_comment(row) {
   // Comments are rows with IDs ending in 9. I don't know why.
   return row.id.substr(-1) == "9";
+}
+
+function row_is_ignore_bar(row) {
+  tables = row.getElementsByTagName("table");
+  return tables.length > 0 && tables[0].getAttribute("class") == "ignored";
 }
 
 function post_is_ignored_server_side(row) {
