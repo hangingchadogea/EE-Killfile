@@ -2,7 +2,7 @@ default_config = {"kill_regex": "this default string will match nothing I hope",
                   "autoignore": true,
                   "hide_images": true,
                   "hide_fully": false}
-chrome.storage.sync.get("configuration", actually_do_things);
+chrome.storage.sync.get("configuration", chrome_configuration);
 
 function whyIgnore(element, kill_regex, ignored_users, hide_images) {
   if (!row_is_forum_comment(element)){
@@ -27,7 +27,7 @@ function whyIgnore(element, kill_regex, ignored_users, hide_images) {
   return null;
 }
 
-function actually_do_things(response){
+function chrome_configuration(response){
   if (response && response.configuration) {
     var configuration = response.configuration;
     console.log("Using configuration from chrome.sync:")
@@ -42,7 +42,11 @@ function actually_do_things(response){
   else {
     console.log("Using default configuration.")
     var configuration = default_config;
-  } 
+  }
+  run_killfile(configuration);
+}
+
+function run_killfile(configuration){
   var kill_regex = configuration.kill_regex;
   var hide_images = configuration.hide_images;
   var hide_fully = configuration.hide_fully;
