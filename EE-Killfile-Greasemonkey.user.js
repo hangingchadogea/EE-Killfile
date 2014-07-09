@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name        EE-Killfile
 // @namespace   noideawhatthisis
-// @include     http://www.baseballthinkfactory.org/forums/forums/viewthread/*
+// @include     http://www.baseballthinkfactory.org/forums/viewthread/*
+// @match       http://www.baseballthinkfactory.org/forums/viewthread/*
 // @version     1
 // @grant       none
+// @description It blocks posts on the BTF fora.
 // ==/UserScript==
 
 configuration = new Array();
