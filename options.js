@@ -1,7 +1,8 @@
 default_config = {"kill_regex": "quote_author..(Yun Taragoashi)",
                   "autoignore": true,
                   "hide_images": true,
-                  "hide_fully": false}
+                  "hide_fully": false,
+                  "hide_link_numbers": false}
 
 function save_options() {
   var text_area = document.getElementById("kill_regex");
@@ -13,10 +14,13 @@ function save_options() {
 
   var hide_fully = document.getElementById("hide_fully").checked;
 
+  var hide_link_numbers = document.getElementById("hide_link_numbers").checked;
+
   var configuration = {"kill_regex": kill_regex,
                        "hide_images": hide_images,
                        "autoignore": autoignore,
-                       "hide_fully": hide_fully};
+                       "hide_fully": hide_fully,
+                       "hide_link_numbers": hide_link_numbers};
   console.log("Saving configuration:");
   console.log(configuration);
   chrome.storage.sync.set({"configuration": configuration}, updateStatus);
@@ -56,7 +60,7 @@ function restore_options(response) {
   var text_area = document.getElementById("kill_regex");
   text_area.value = configuration.kill_regex;
 
-  var boolean_properties = ["hide_images", "autoignore", "hide_fully"];
+  var boolean_properties = ["hide_images", "autoignore", "hide_fully", "hide_link_numbers"];
   for (i = 0; i < boolean_properties.length; ++i) {
     document.getElementById(boolean_properties[i]).checked = configuration[
         boolean_properties[i]];

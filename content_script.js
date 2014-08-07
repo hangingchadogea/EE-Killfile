@@ -1,7 +1,8 @@
 default_config = {"kill_regex": "this default string will match nothing I hope",
                   "autoignore": true,
                   "hide_images": true,
-                  "hide_fully": false}
+                  "hide_fully": false,
+                  "hide_link_numbers": false}
 chrome.storage.sync.get("configuration", chrome_configuration);
 
 function whyIgnore(element, kill_regex, ignored_users, hide_images) {
@@ -50,6 +51,7 @@ function run_killfile(configuration){
   var kill_regex = configuration.kill_regex;
   var hide_images = configuration.hide_images;
   var hide_fully = configuration.hide_fully;
+  var hide_link_numbers = configuration.hide_link_numbers;
   if (configuration.autoignore) {
     ignoredUsers = determine_ignored_users();
   }
@@ -66,6 +68,14 @@ function run_killfile(configuration){
     if (reason) {
       set_post_ignored(el[i], reason, hide_fully);
       i = i+2;
+    }
+  }
+  if (hide_link_numbers) {
+    var a_tags = document.getElementsByTagName("a");
+    for (var i=0; i < a_tags.length; i++) {
+      if (a_tags[i].innerText.match("# [0-9]+")) {
+        a_tags[i].innerText = "Link";
+      }
     }
   }
 }
