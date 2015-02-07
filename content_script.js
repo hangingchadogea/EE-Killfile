@@ -108,7 +108,7 @@ function comment_author(comment_row) {
   var anchors = comment_row.getElementsByTagName("a");
   var author_link = undefined;
   for (var i=0;i<anchors.length;i++)
-    if (anchors[i].href.match('/members(hip)?/'))
+    if (anchors[i].href.match('/member(s)?(hip)?/'))
       author_link = anchors[i];
   if (hasInnerText) {
     return author_link.innerText;
