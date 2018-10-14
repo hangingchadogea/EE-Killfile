@@ -165,9 +165,16 @@ function determine_ignored_users() {
   for(var i=0;i<allRows.length;i++){
     currentRow = allRows[i];
     if (row_is_forum_comment(currentRow)) {
-      author = comment_author(currentRow).replace(
-          /[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+      author = comment_author(currentRow);
+      // The site strips quotation marks and anything after them from quote
+      // authors, so we have to match stuff stripped of that.
+      author = author.replace(/\".*$/g,'');
+      // It also strips trailing whitespace. And slashes, apparently.
       author = author.replace(/[\s\\]+$/g,'');
+      // Then there are all these characters that we fail to use in regexes.
+      // We replace them all with dots.
+      author = author.replace(
+          /[-'[\]{}()*+?.,\\^$|#\s]/g, ".");
       if (post_is_ignored_server_side(currentRow)) {
         if (ignoredUsers.indexOf(author) == -1) {
           ignoredUsers.push(author);
