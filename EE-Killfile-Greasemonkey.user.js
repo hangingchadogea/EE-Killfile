@@ -36,14 +36,15 @@ function whyIgnore(element, kill_regex, ignored_users, hide_images) {
   }
   if (hide_images && post_has_inline_image(element))
     return "it embeds an inline image.";
+  var post_without_signature = element.getElementsByClassName("post")[0]
   if (ignored_users.length > 0) {
-    quote_match = element.innerHTML.match("quote_author.*(" +
-                                          ignored_users.join("|") + ") - ");
+    quote_match = post_without_signature.innerHTML.match(
+      "quote_author.*(" + ignored_users.join("|") + ") - ");
     if (quote_match) {
       return "it quotes <b>" + quote_match[1] + "</b>";
     }
   }
-  regex_match = element.innerHTML.match(kill_regex);
+  regex_match = post_without_signature.innerHTML.match(kill_regex);
   if (regex_match) {
     return "it contains the string '" + regex_match[0] + "'";
   }
