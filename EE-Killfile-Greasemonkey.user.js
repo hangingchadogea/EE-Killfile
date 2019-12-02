@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        EE-Killfile
 // @namespace   noideawhatthisis
-// @include     http://www.baseballthinkfactory.org/forums/viewthread/*
-// @match       http://www.baseballthinkfactory.org/forums/viewthread/*
+// @include     *://www.baseballthinkfactory.org/forums/viewthread/*
+// @match       *://www.baseballthinkfactory.org/forums/viewthread/*
 // @version     1
 // @grant       none
 // @description It blocks posts on the BTF fora.
@@ -157,7 +157,7 @@ function post_is_ignored_server_side(row) {
 
 function post_has_inline_image(row) {
   return row.innerHTML.match(
-      "img src=.(?!http://www.baseballthinkfactory.org)");
+      "img src=.(?!http(s?)://www.baseballthinkfactory.org)");
 }
 
 function determine_ignored_users() {
